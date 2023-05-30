@@ -21,7 +21,8 @@ public class Area {
     private LocalDateTime created_at;
     @Column(nullable = false)
     private LocalDateTime updated_at;
-    public Area enrollArea(String address,String zip_code){
+
+    public Area enrollArea(String address, String zip_code) {
         this.address = address;
         this.zip_code = zip_code;
         this.created_at = LocalDateTime.now();

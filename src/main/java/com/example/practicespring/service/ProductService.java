@@ -31,60 +31,74 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final AreaRepository areaRepository;
     private final UsersRepository usersRepository;
+
+    //상품 카테고리 등록
     public PostCategoryRes enrollCategory(PostCategoryReq postCategoryReq) throws BaseException {
-        try{
+        try {
             Product_Category product_category = new Product_Category();
             product_category.enrollCategory(postCategoryReq.getCateName());
             product_categoryRepository.save(product_category);
             return new PostCategoryRes(product_category.getCateName());
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
         }
     }
+
+    //상품등록
     public PostProductRes enrollProduct(PostProductReq postProductReq) throws BaseException {
-        try{
+        try {
             Product product = new Product();
+            //유저 검색
             Users user = usersRepository.findUserByPhone_number(postProductReq.getSellerNumber());
+            //상품 카테고리 검색
             Product_Category product_category = product_categoryRepository.findCateByName(postProductReq.getCategory());
+            //지역 검색
             Area area = areaRepository.findAreaByZipCode(postProductReq.getZipCode());
-            product.enrollProduct(user,product_category,area, postProductReq.getTitle(), postProductReq.getPrice(), postProductReq.getContent());
+            //상품 등록
+            product.enrollProduct(user, product_category, area, postProductReq.getTitle(), postProductReq.getPrice(), postProductReq.getContent());
             productRepository.save(product);
-            return new PostProductRes(postProductReq.getSellerNumber(),postProductReq.getCategory(),postProductReq.getZipCode(),postProductReq.getTitle(),postProductReq.getPrice(),postProductReq.getContent());
-        }catch(Exception e){
+            return new PostProductRes(postProductReq.getSellerNumber(), postProductReq.getCategory(), postProductReq.getZipCode(), postProductReq.getTitle(), postProductReq.getPrice(), postProductReq.getContent());
+        } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
         }
     }
-    public List<GetProductRes> getProducts() throws BaseException{
-        try{
+
+    //상품 조회
+    public List<GetProductRes> getProducts() throws BaseException {
+        try {
             List<Product> products = productRepository.findProducts();
             List<GetProductRes> getProductRes = products.stream()
-                    .map(product -> new GetProductRes(product.getSeller_id().getNickname(),product.getCategory_id().getCateName(),product.getSelling_area_id().getAddress(),product.getTitle(),product.getPrice(),product.getContent()))
+                    .map(product -> new GetProductRes(product.getSeller_id().getNickname(), product.getCategory_id().getCateName(), product.getSelling_area_id().getAddress(), product.getTitle(), product.getPrice(), product.getContent()))
                     .collect(Collectors.toList());
             return getProductRes;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
         }
     }
 
-    public List<GetProductRes> getProductsByNumber(String phoneNumber) throws BaseException{
-        try{
+    //특정 회원 상품 조회
+    public List<GetProductRes> getProductsByNumber(String phoneNumber) throws BaseException {
+        try {
             List<Product> products = productRepository.findProductByNumber(phoneNumber);
             List<GetProductRes> getProductRes = products.stream()
-                    .map(product -> new GetProductRes(product.getSeller_id().getNickname(),product.getCategory_id().getCateName(),product.getSelling_area_id().getAddress(),product.getTitle(),product.getPrice(),product.getContent()))
+                    .map(product -> new GetProductRes(product.getSeller_id().getNickname(), product.getCategory_id().getCateName(), product.getSelling_area_id().getAddress(), product.getTitle(), product.getPrice(), product.getContent()))
                     .collect(Collectors.toList());
             return getProductRes;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
         }
     }
 
+    //상품삭제
     @Transactional
-    public void deleteProduct(PatchProductReq patchProductReq){
+    public void deleteProduct(PatchProductReq patchProductReq) {
         Product product = productRepository.getReferenceById(patchProductReq.getProductId());
         product.deleteProduct();
     }
+
+    //상품 가격 변경
     @Transactional
-    public void modifyPrice(PostModifyPriceReq postModifyPriceReq){
+    public void modifyPrice(PostModifyPriceReq postModifyPriceReq) {
         Product product = productRepository.getReferenceById(postModifyPriceReq.getProductId());
         product.modifyPrice(postModifyPriceReq.getPrice());
     }

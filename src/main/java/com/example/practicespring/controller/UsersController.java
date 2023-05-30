@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.example.practicespring.utils.ValidationRegex.isRegexNumber;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -30,26 +29,29 @@ public class UsersController {
 
     //회원가입
     @PostMapping("/join")
-    public BaseResponse<PostUsersRes> joinUser(@RequestBody PostUsersReq postUsersReq){
-        if(!isRegexNumber(postUsersReq.getPhone_number())) return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_PHONE_NUMBER);
-        try{
+    public BaseResponse<PostUsersRes> joinUser(@RequestBody PostUsersReq postUsersReq) {
+        if (!isRegexNumber(postUsersReq.getPhone_number()))
+            return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_PHONE_NUMBER);
+        try {
             return new BaseResponse<>(usersService.joinUser(postUsersReq));
-        }catch(BaseException exception){
+        } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-    //회원 정보
+
+    //회원 정보 조회
     @GetMapping("/read/{nickName}")
-    public BaseResponse<List<GetUserRes>> getUsers(@PathVariable(value = "nickName",required = false) String nickName ){
-        try{
-            if(nickName == null){
+    public BaseResponse<List<GetUserRes>> getUsers(@PathVariable(value = "nickName", required = false) String nickName) {
+        try {
+            if (nickName == null) {
                 return new BaseResponse<>(usersService.getUsers());
             }
             return new BaseResponse<>(usersService.getUsersByNickname(nickName));
-        }catch(BaseException e){
+        } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
     /* 로그인 구현
     @PostMapping("/log-in")
     public BaseResponse<PostLoginRes> loginUser(@RequestParam PostLoginReq postLoginReq){
@@ -63,17 +65,21 @@ public class UsersController {
     */
     //닉네임 수정
     @PatchMapping("/nicknameupdate")
-    public BaseResponse<String> modifyUserInfo(@RequestParam String phone_number,@RequestParam String nickname){
+    public BaseResponse<String> modifyUserInfo(@RequestParam String phone_number, @RequestParam String nickname) {
+        //유저 검색
         Users users = userRepository.findUserByPhone_number(phone_number);
-        PatchUserReq patchUserReq = new PatchUserReq(users.getId(),nickname);
+        PatchUserReq patchUserReq = new PatchUserReq(users.getId(), nickname);
         usersService.modifyUserName(patchUserReq);
         String result = "닉네임이 수정되었습니다.";
         return new BaseResponse<>(result);
     }
+
+    //이미지 업데이트
     @PutMapping("/imageupdate")
-    public BaseResponse<String> modifyUserImg(@RequestParam String phone_number, @RequestParam String img_url){
+    public BaseResponse<String> modifyUserImg(@RequestParam String phone_number, @RequestParam String img_url) {
+        //유저 검색
         Users users = userRepository.findUserByPhone_number(phone_number);
-        PutUserImgReq putUserImgReq = new PutUserImgReq(users.getId(),img_url);
+        PutUserImgReq putUserImgReq = new PutUserImgReq(users.getId(), img_url);
         usersService.putUserImg(putUserImgReq);
         String result = "이미지가 등록(변경)되었습니다";
         return new BaseResponse<>(result);

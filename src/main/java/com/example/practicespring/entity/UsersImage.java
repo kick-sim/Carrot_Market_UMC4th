@@ -13,20 +13,23 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 public class UsersImage implements Serializable {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private long id;
     @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")
     Users user;
-    @Column(name="image_url")
+    @Column(name = "image_url")
     private String image_url;
-    public void putImg(String image_url){
+
+    public void putImg(String image_url) {
         this.image_url = image_url;
         user.setUpdated_at(LocalDateTime.now());
     }
-    public UsersImage createImage(Users user){
+
+    public UsersImage createImage(Users user) {
         this.image_url = "NONE";
         this.user = user;
         return this;

@@ -14,13 +14,15 @@ public class GetUserRes {
     private String nickname;
     private float manner_rate;
     private String img_url;
-    public GetUserRes(String phone_number,String nickname,float manner_rate){
+
+    public GetUserRes(String phone_number, String nickname, float manner_rate) {
         this.phone_number = phone_number;
         this.nickname = nickname;
         this.manner_rate = manner_rate;
         this.img_url = " ";
     }
-    public GetUserRes(String phone_number,String nickname,float manner_rate,String img_url){
+
+    public GetUserRes(String phone_number, String nickname, float manner_rate, String img_url) {
         this.phone_number = phone_number;
         this.nickname = nickname;
         this.manner_rate = manner_rate;

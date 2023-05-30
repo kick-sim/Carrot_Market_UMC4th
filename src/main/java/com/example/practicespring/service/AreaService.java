@@ -13,13 +13,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class AreaService {
     private final AreaRepository areaRepository;
+
+    //지역등록
     public PostAreaRes enrollArea(PostAreaReq postAreaReq) throws BaseException {
-        try{
+        try {
             Area area = new Area();
             area.enrollArea(postAreaReq.getAddress(), postAreaReq.getZip_code());
             areaRepository.save(area);
-            return new PostAreaRes(area.getAddress(),area.getZip_code());
-        }catch (Exception e){
+            return new PostAreaRes(area.getAddress(), area.getZip_code());
+        } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
         }
     }

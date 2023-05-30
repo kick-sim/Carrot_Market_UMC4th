@@ -22,14 +22,15 @@ public class AreaController {
     private final AreaService areaService;
     private final AreaRepository areaRepository;
 
+    //지역등록
     @PostMapping("/enroll")
-    public BaseResponse<PostAreaRes> enrollArea(@RequestBody PostAreaReq postAreaReq){
-        try{
-            if(postAreaReq.getAddress() == null || postAreaReq.getZip_code() == null){
+    public BaseResponse<PostAreaRes> enrollArea(@RequestBody PostAreaReq postAreaReq) {
+        try {
+            if (postAreaReq.getAddress() == null || postAreaReq.getZip_code() == null) {
                 return new BaseResponse<>(BaseResponseStatus.INVALID_REQ);
             }
             return new BaseResponse<>(areaService.enrollArea(postAreaReq));
-        }catch(BaseException e){
+        } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
     }

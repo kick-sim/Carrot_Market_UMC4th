@@ -13,9 +13,10 @@ public class Product_Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(nullable = false,name = "name")
+    @Column(nullable = false, name = "name")
     private String CateName;
-    public void enrollCategory(String name){
+
+    public void enrollCategory(String name) {
         this.CateName = name;
     }
 }

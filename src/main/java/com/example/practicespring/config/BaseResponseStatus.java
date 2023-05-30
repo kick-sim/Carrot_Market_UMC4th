@@ -17,7 +17,7 @@ public enum BaseResponseStatus {
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
     EMPTY_JWT(false, 2001, "JWT를 입력해주세요."),
     INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),
-    INVALID_USER_JWT(false,2003,"권한이 없는 유저의 접근입니다."),
+    INVALID_USER_JWT(false, 2003, "권한이 없는 유저의 접근입니다."),
 
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
@@ -25,14 +25,14 @@ public enum BaseResponseStatus {
     // [POST] /users
     POST_USERS_EMPTY_PHONE_NUMBER(false, 2015, "전화번호를 입력해주세요."),
     POST_USERS_INVALID_PHONE_NUMBER(false, 2016, "전화번호 형식을 확인해주세요."),
-    POST_USERS_EXISTS_PHONE_NUMBER(false,2017,"중복된 전화번호입니다."),
+    POST_USERS_EXISTS_PHONE_NUMBER(false, 2017, "중복된 전화번호입니다."),
 
     // [POST] /boards
     POST_BOARDS_EMPTY_TITLE(false, 2018, "제목은 두 글자 이상으로 작성해주세요."),
     // [PACTH] /deleteProduct
-    PRODUCT_INVALID_REQ(false,2019,"해당 상품에대한 권한이 없습니다."),
+    PRODUCT_INVALID_REQ(false, 2019, "해당 상품에대한 권한이 없습니다."),
 
-    INVALID_REQ(false,2020,"필수 입력 사항을 입력하지 않았습니다."),
+    INVALID_REQ(false, 2020, "필수 입력 사항을 입력하지 않았습니다."),
 
 
     /**
@@ -43,8 +43,7 @@ public enum BaseResponseStatus {
 
     // [POST] /users
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
-    FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
-
+    FAILED_TO_LOGIN(false, 3014, "없는 아이디거나 비밀번호가 틀렸습니다."),
 
 
     /**
@@ -54,7 +53,7 @@ public enum BaseResponseStatus {
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
 
     //[PATCH] /users/{userIdx}
-    MODIFY_FAIL_USERNAME(false,4014,"유저네임 수정 실패"),
+    MODIFY_FAIL_USERNAME(false, 4014, "유저네임 수정 실패"),
 
     //[PATCH] /users/{boardIdx}
     MODIFY_FAIL_BOARDTITLE(false, 4015, "게시글 제목 수정 실패"),

@@ -8,6 +8,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
 @Getter
 @AllArgsConstructor
 public class PostProductReq {

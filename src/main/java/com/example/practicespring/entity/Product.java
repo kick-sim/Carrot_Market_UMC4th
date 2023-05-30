@@ -39,7 +39,8 @@ public class Product {
     private LocalDateTime updated_at;
     @Column(nullable = false)
     private LocalDateTime refreshed_at;
-    public void enrollProduct(Users user, Product_Category product_category,Area selling_area_id,String title,int price,String content){
+
+    public void enrollProduct(Users user, Product_Category product_category, Area selling_area_id, String title, int price, String content) {
         this.seller_id = user;
         this.category_id = product_category;
         this.selling_area_id = selling_area_id;
@@ -52,10 +53,12 @@ public class Product {
         this.updated_at = LocalDateTime.now();
         this.refreshed_at = LocalDateTime.now();
     }
-    public void deleteProduct(){
+
+    public void deleteProduct() {
         this.status = 0;
     }
-    public void modifyPrice(int price){
+
+    public void modifyPrice(int price) {
         this.price = price;
     }
 }

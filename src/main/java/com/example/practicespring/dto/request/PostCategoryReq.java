@@ -9,5 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PostCategoryReq {
     private String CateName;
-    public PostCategoryReq(){}
+
+    public PostCategoryReq() {
+    }
 }

@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Users{
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Users {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(nullable = false)
     private String phone_number;
@@ -26,7 +27,8 @@ public class Users{
     private LocalDateTime created_at;
     @Column(nullable = false)
     private LocalDateTime updated_at;
-    public Users createUsers(String phone_number, String nickname){
+
+    public Users createUsers(String phone_number, String nickname) {
         this.phone_number = phone_number;
         this.nickname = nickname;
         this.manner_rate = 36.5F;
@@ -35,7 +37,8 @@ public class Users{
         this.updated_at = LocalDateTime.now();
         return this;
     }
-    public void updateNickName(String nickName){
+
+    public void updateNickName(String nickName) {
         this.nickname = nickName;
         this.updated_at = LocalDateTime.now();
     }
