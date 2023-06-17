@@ -30,7 +30,8 @@ public class ProductController {
     @PostMapping("/catenroll")
     public BaseResponse<PostCategoryRes> enrollCategory(@RequestBody PostCategoryReq postCategoryReq) {
         try {
-            if (postCategoryReq.getCateName() == null) {
+            System.out.println(postCategoryReq.getCatename());
+            if (postCategoryReq.getCatename() == null) {
                 return new BaseResponse<>(BaseResponseStatus.INVALID_REQ);
             }
             return new BaseResponse<>(productService.enrollCategory(postCategoryReq));
@@ -43,7 +44,7 @@ public class ProductController {
     @PostMapping("/enroll")
     public BaseResponse<PostProductRes> enrollProduct(@RequestBody PostProductReq postProductReq) {
         try {
-            if (postProductReq.getTitle() == null || postProductReq.getCategory() == null || postProductReq.getZipCode() == null || postProductReq.getSellerNumber() == null || (Integer) postProductReq.getPrice() == null) {
+            if (postProductReq.getTitle() == null || postProductReq.getCategory() == null || postProductReq.getZipCode() == null || postProductReq.getSellerEmail() == null || (Integer) postProductReq.getPrice() == null) {
                 return new BaseResponse<>(BaseResponseStatus.INVALID_REQ);
             }
             return new BaseResponse<>(productService.enrollProduct(postProductReq));
@@ -54,13 +55,13 @@ public class ProductController {
 
     //상품 조회
     @GetMapping("/read")
-    public BaseResponse<List<GetProductRes>> getProducts(@RequestParam(required = false) String phoneNumber) {
+    public BaseResponse<List<GetProductRes>> getProducts(@RequestParam(required = false) String email) {
         try {
-            if (phoneNumber == null) { // 전화번호없이 조회 시 전체 검색
+            if (email == null) { // 전화번호없이 조회 시 전체 검색
                 return new BaseResponse<>(productService.getProducts());
             }
             // 전화번호 받으면 그 회원의 상품만 검색
-            return new BaseResponse<>(productService.getProductsByNumber(phoneNumber));
+            return new BaseResponse<>(productService.getProductsByEmail(email));
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }

@@ -16,7 +16,9 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(nullable = false)
-    private String phone_number;
+    private String password;
+    @Column(nullable = false)
+    private String email;
     @Column(nullable = false)
     private String nickname;
     @Column(nullable = false)
@@ -28,8 +30,9 @@ public class Users {
     @Column(nullable = false)
     private LocalDateTime updated_at;
 
-    public Users createUsers(String phone_number, String nickname) {
-        this.phone_number = phone_number;
+    public Users createUsers(String email, String password, String nickname) {
+        this.email = email;
+        this.password = password;
         this.nickname = nickname;
         this.manner_rate = 36.5F;
         this.activated = 1;

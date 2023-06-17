@@ -6,5 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PostLoginReq {
-    private String phone_number;
+    private String email;
+    private String password;
 }

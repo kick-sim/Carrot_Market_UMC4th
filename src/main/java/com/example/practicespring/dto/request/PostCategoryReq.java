@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class PostCategoryReq {
-    private String CateName;
+    private String catename;
 
     public PostCategoryReq() {
     }

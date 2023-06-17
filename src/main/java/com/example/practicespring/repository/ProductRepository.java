@@ -15,6 +15,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.status = 1")
     List<Product> findProducts();
 
-    @Query("select p from Product p where p.seller_id.phone_number = :phoneNumber and p.status = 1")
-    List<Product> findProductByNumber(@Param("phoneNumber") String phoneNumber);
+    @Query("select p from Product p where p.seller_id.email = :email and p.status = 1")
+    List<Product> findProductByEmail(@Param("email") String email);
 }

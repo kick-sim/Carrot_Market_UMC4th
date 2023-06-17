@@ -16,3 +16,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+oauth2:
+  google:
+    client-id: 1079894895605-nvetmp2ma50mpuipp0jsr7n4sekte08v.apps.googleusercontent.com
+    client-secret: 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
+    redirect-uri: http://localhost:8080/user/login/google
+    token-uri: https://oauth2.googleapis.com/token
+    resource-uri: https://www.googleapis.com/oauth2/v2/userinfo
+    url: https://accounts:google:com/o/oauth2/v2/auth

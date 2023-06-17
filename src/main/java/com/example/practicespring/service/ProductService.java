@@ -36,7 +36,7 @@ public class ProductService {
     public PostCategoryRes enrollCategory(PostCategoryReq postCategoryReq) throws BaseException {
         try {
             Product_Category product_category = new Product_Category();
-            product_category.enrollCategory(postCategoryReq.getCateName());
+            product_category.enrollCategory(postCategoryReq.getCatename());
             product_categoryRepository.save(product_category);
             return new PostCategoryRes(product_category.getCateName());
         } catch (Exception e) {
@@ -49,7 +49,7 @@ public class ProductService {
         try {
             Product product = new Product();
             //유저 검색
-            Users user = usersRepository.findUserByPhone_number(postProductReq.getSellerNumber());
+            Users user = usersRepository.findUserByEmail(postProductReq.getSellerEmail());
             //상품 카테고리 검색
             Product_Category product_category = product_categoryRepository.findCateByName(postProductReq.getCategory());
             //지역 검색
@@ -57,7 +57,7 @@ public class ProductService {
             //상품 등록
             product.enrollProduct(user, product_category, area, postProductReq.getTitle(), postProductReq.getPrice(), postProductReq.getContent());
             productRepository.save(product);
-            return new PostProductRes(postProductReq.getSellerNumber(), postProductReq.getCategory(), postProductReq.getZipCode(), postProductReq.getTitle(), postProductReq.getPrice(), postProductReq.getContent());
+            return new PostProductRes(postProductReq.getSellerEmail(), postProductReq.getCategory(), postProductReq.getZipCode(), postProductReq.getTitle(), postProductReq.getPrice(), postProductReq.getContent());
         } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
         }
@@ -77,9 +77,9 @@ public class ProductService {
     }
 
     //특정 회원 상품 조회
-    public List<GetProductRes> getProductsByNumber(String phoneNumber) throws BaseException {
+    public List<GetProductRes> getProductsByEmail(String email) throws BaseException {
         try {
-            List<Product> products = productRepository.findProductByNumber(phoneNumber);
+            List<Product> products = productRepository.findProductByEmail(email);
             List<GetProductRes> getProductRes = products.stream()
                     .map(product -> new GetProductRes(product.getSeller_id().getNickname(), product.getCategory_id().getCateName(), product.getSelling_area_id().getAddress(), product.getTitle(), product.getPrice(), product.getContent()))
                     .collect(Collectors.toList());

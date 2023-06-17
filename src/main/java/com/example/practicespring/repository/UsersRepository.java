@@ -16,6 +16,9 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     @Query("select u from Users u where u.nickname = :nickName")
     List<Users> findUsersByNickname(@Param("nickName") String nickName);
 
-    @Query("select u from Users u where u.phone_number = :phone_number")
-    Users findUserByPhone_number(@Param("phone_number") String phone_number);
+    @Query("select u from Users u where u.email = :email")
+    Users findUserByEmail(@Param("email") String email);
+
+    @Query("select count(u) from Users u where u.email = :email")
+    Integer findByEmailCount(@Param("email") String email);
 }

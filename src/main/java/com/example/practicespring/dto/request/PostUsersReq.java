@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class PostUsersReq {
-    private String phone_number;
+    private String email;
+    private String password;
     private String nickname;
 }

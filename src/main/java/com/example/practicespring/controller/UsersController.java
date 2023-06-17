@@ -3,9 +3,11 @@ package com.example.practicespring.controller;
 import com.example.practicespring.config.BaseResponse;
 import com.example.practicespring.config.BaseResponseStatus;
 import com.example.practicespring.dto.request.PatchUserReq;
+import com.example.practicespring.dto.request.PostLoginReq;
 import com.example.practicespring.dto.request.PostUsersReq;
 import com.example.practicespring.dto.request.PutUserImgReq;
 import com.example.practicespring.dto.response.GetUserRes;
+import com.example.practicespring.dto.response.PostLoginRes;
 import com.example.practicespring.dto.response.PostUsersRes;
 import com.example.practicespring.entity.Users;
 import com.example.practicespring.repository.UsersRepository;
@@ -17,7 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.practicespring.utils.ValidationRegex.isRegexNumber;
+import static com.example.practicespring.utils.ValidationRegex.isRegexEmail;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -30,8 +33,8 @@ public class UsersController {
     //회원가입
     @PostMapping("/join")
     public BaseResponse<PostUsersRes> joinUser(@RequestBody PostUsersReq postUsersReq) {
-        if (!isRegexNumber(postUsersReq.getPhone_number()))
-            return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_PHONE_NUMBER);
+        if (!isRegexEmail(postUsersReq.getEmail()))
+            return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_EMAIL);
         try {
             return new BaseResponse<>(usersService.joinUser(postUsersReq));
         } catch (BaseException exception) {
@@ -39,8 +42,19 @@ public class UsersController {
         }
     }
 
+    @PostMapping("/login")
+    public BaseResponse<PostLoginRes> loginUser(@RequestBody PostLoginReq postLoginReq) {
+        try {
+            if (!isRegexEmail(postLoginReq.getEmail()))
+                return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_EMAIL);
+            return new BaseResponse<>(usersService.login(postLoginReq));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
     //회원 정보 조회
-    @GetMapping("/read/{nickName}")
+    @GetMapping({"/read/{nickName}", "/read"})
     public BaseResponse<List<GetUserRes>> getUsers(@PathVariable(value = "nickName", required = false) String nickName) {
         try {
             if (nickName == null) {
@@ -52,22 +66,11 @@ public class UsersController {
         }
     }
 
-    /* 로그인 구현
-    @PostMapping("/log-in")
-    public BaseResponse<PostLoginRes> loginUser(@RequestParam PostLoginReq postLoginReq){
-        try{
-            if(!isRegexNumber(postLoginReq.getPhone_number())) return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_PHONE_NUMBER);
-            return new BaseResponse<>(usersService.login(postLoginReq));
-        }catch (BaseException e){
-            return new BaseResponse<>(e.getStatus());
-        }
-    }
-    */
     //닉네임 수정
     @PatchMapping("/nicknameupdate")
-    public BaseResponse<String> modifyUserInfo(@RequestParam String phone_number, @RequestParam String nickname) {
+    public BaseResponse<String> modifyUserInfo(@RequestParam String email, @RequestParam String nickname) {
         //유저 검색
-        Users users = userRepository.findUserByPhone_number(phone_number);
+        Users users = userRepository.findUserByEmail(email);
         PatchUserReq patchUserReq = new PatchUserReq(users.getId(), nickname);
         usersService.modifyUserName(patchUserReq);
         String result = "닉네임이 수정되었습니다.";
@@ -76,9 +79,9 @@ public class UsersController {
 
     //이미지 업데이트
     @PutMapping("/imageupdate")
-    public BaseResponse<String> modifyUserImg(@RequestParam String phone_number, @RequestParam String img_url) {
+    public BaseResponse<String> modifyUserImg(@RequestParam String email, @RequestParam String img_url) {
         //유저 검색
-        Users users = userRepository.findUserByPhone_number(phone_number);
+        Users users = userRepository.findUserByEmail(email);
         PutUserImgReq putUserImgReq = new PutUserImgReq(users.getId(), img_url);
         usersService.putUserImg(putUserImgReq);
         String result = "이미지가 등록(변경)되었습니다";

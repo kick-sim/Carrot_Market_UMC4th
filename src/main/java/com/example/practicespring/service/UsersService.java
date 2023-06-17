@@ -3,14 +3,18 @@ package com.example.practicespring.service;
 import com.example.practicespring.config.BaseException;
 import com.example.practicespring.config.BaseResponseStatus;
 import com.example.practicespring.dto.request.PatchUserReq;
+import com.example.practicespring.dto.request.PostLoginReq;
 import com.example.practicespring.dto.request.PostUsersReq;
 import com.example.practicespring.dto.request.PutUserImgReq;
 import com.example.practicespring.dto.response.GetUserRes;
+import com.example.practicespring.dto.response.PostLoginRes;
 import com.example.practicespring.dto.response.PostUsersRes;
 import com.example.practicespring.entity.UsersImage;
 import com.example.practicespring.entity.Users;
 import com.example.practicespring.repository.UserImageRepository;
 import com.example.practicespring.repository.UsersRepository;
+import com.example.practicespring.utils.JwtService;
+import com.example.practicespring.utils.Secret;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,21 +27,36 @@ import java.util.stream.Collectors;
 public class UsersService {
     private final UsersRepository userRepository;
     private final UserImageRepository userImageRepository;
+    private final JwtService jwtService;
 
     //회원가입
     public PostUsersRes joinUser(PostUsersReq postUsersReq) throws BaseException {
         try {
+            if (userRepository.findUserByEmail(postUsersReq.getEmail()) != null) {
+                throw new BaseException(BaseResponseStatus.POST_USERS_EXISTS_EMAIL);
+            }
             Users users = new Users();
-            users.createUsers(postUsersReq.getPhone_number(), postUsersReq.getNickname());
+            users.createUsers(postUsersReq.getEmail(), postUsersReq.getPassword(), postUsersReq.getNickname());
             userRepository.save(users);
             //image default
             UsersImage userImage = new UsersImage();
             userImage.createImage(users);
             userImageRepository.save(userImage);
 
-            return new PostUsersRes(users.getPhone_number(), users.getNickname(), users.getManner_rate());
+            return new PostUsersRes(users.getEmail(), users.getNickname(), users.getManner_rate());
         } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException {
+        Users user = userRepository.findUserByEmail(postLoginReq.getEmail());
+        String password = user.getPassword();
+        if (postLoginReq.getPassword().equals(password)) {
+            String jwt = jwtService.createJwt(user.getId());
+            return new PostLoginRes(user.getId(), jwt);
+        } else {
+            throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
         }
     }
 
@@ -47,7 +66,7 @@ public class UsersService {
             List<Users> users = userRepository.findUsers();
 
             List<GetUserRes> GetUserRes = users.stream()
-                    .map(user -> new GetUserRes(user.getPhone_number(), user.getNickname(), user.getManner_rate(),
+                    .map(user -> new GetUserRes(user.getEmail(), user.getPassword(), user.getNickname(), user.getManner_rate(),
                             userImageRepository.findUrl(user.getId())))
                     .collect(Collectors.toList());
             return GetUserRes;
@@ -61,7 +80,7 @@ public class UsersService {
         try {
             List<Users> users = userRepository.findUsersByNickname(nickName);
             List<GetUserRes> GetuserRes = users.stream()
-                    .map(user -> new GetUserRes(user.getPhone_number(), user.getNickname(), user.getManner_rate(),
+                    .map(user -> new GetUserRes(user.getEmail(), user.getPassword(), user.getNickname(), user.getManner_rate(),
                             userImageRepository.findUrl(user.getId())))
                     .collect(Collectors.toList());
             return GetuserRes;
