@@ -34,6 +34,8 @@ public enum BaseResponseStatus {
 
     INVALID_REQ(false, 2020, "필수 입력 사항을 입력하지 않았습니다."),
 
+    PRODUCT_NOT_EXIST(false, 2021,"존재하지 않는 상품 번호입니다"),
+
 
     /**
      * 3000 : Response 오류

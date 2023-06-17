@@ -17,4 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select p from Product p where p.seller_id.email = :email and p.status = 1")
     List<Product> findProductByEmail(@Param("email") String email);
+
+    @Query("select count(p) from Product p where p.id = :id")
+    Integer findByProductIdCount(@Param("id") long id);
 }

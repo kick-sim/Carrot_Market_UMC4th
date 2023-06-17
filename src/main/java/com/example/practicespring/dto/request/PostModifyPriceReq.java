@@ -9,6 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PostModifyPriceReq {
     long productId;
-    long userId;
     int price;
 }
