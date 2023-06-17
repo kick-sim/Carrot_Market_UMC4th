@@ -69,22 +69,43 @@ public class UsersController {
     //닉네임 수정
     @PatchMapping("/nicknameupdate")
     public BaseResponse<String> modifyUserInfo(@RequestParam String email, @RequestParam String nickname) {
-        //유저 검색
-        Users users = userRepository.findUserByEmail(email);
-        PatchUserReq patchUserReq = new PatchUserReq(users.getId(), nickname);
-        usersService.modifyUserName(patchUserReq);
-        String result = "닉네임이 수정되었습니다.";
-        return new BaseResponse<>(result);
+        try {
+            Users user = userRepository.findUserByEmail(email);
+            //jwt에서 idx 추출.
+            Long userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(user.getId() != userIdxByJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            //같다면 유저네임 변경
+            PatchUserReq patchMemberReq = new PatchUserReq(user.getId(), nickname);
+            usersService.modifyUserName(patchMemberReq);
+            String result = "회원정보가 수정되었습니다.";
+            return new BaseResponse<>(result);
+        }  catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 
     //이미지 업데이트
     @PutMapping("/imageupdate")
     public BaseResponse<String> modifyUserImg(@RequestParam String email, @RequestParam String img_url) {
-        //유저 검색
-        Users users = userRepository.findUserByEmail(email);
-        PutUserImgReq putUserImgReq = new PutUserImgReq(users.getId(), img_url);
-        usersService.putUserImg(putUserImgReq);
-        String result = "이미지가 등록(변경)되었습니다";
-        return new BaseResponse<>(result);
+        try {
+            Users user = userRepository.findUserByEmail(email);
+            //jwt에서 idx 추출.
+            Long userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(user.getId() != userIdxByJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            //같다면 유저이미지 변경
+            PutUserImgReq putUserImgReq = new PutUserImgReq(user.getId(), img_url);
+            usersService.putUserImg(putUserImgReq);
+            String result = "이미지가 등록(변경)되었습니다";
+            return new BaseResponse<>(result);
+        }  catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
     }
 }

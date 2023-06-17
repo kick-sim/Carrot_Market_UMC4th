@@ -61,7 +61,7 @@ public class JwtService {
         } catch (Exception ignored) {
             throw new BaseException(INVALID_JWT);
         }
-        // 3. memberId 추출
+        // 3. userId 추출
         return claims.getBody().get("userId", Long.class);  // jwt 에서 userId를 추출합니다.
     }
 
